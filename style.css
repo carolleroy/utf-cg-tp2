@@ -4,7 +4,7 @@ html, body {
     overflow: hidden;
     width: 100%;
     height: 100%;
-    background-color: #fff67a;
+    background-color: #0c0c0c; /* eh importante que seja preto pq a tela vai demorar um tiquinho pra carregar*/
 }
 
 canvas {
