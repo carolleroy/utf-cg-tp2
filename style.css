@@ -4,11 +4,25 @@ html, body {
     overflow: hidden;
     width: 100%;
     height: 100%;
-    background-color: #0c0c0c; /* eh importante que seja preto pq a tela vai demorar um tiquinho pra carregar*/
+    background-color: #0f1724;
 }
 
 canvas {
     display: block;
     width: 100%;
     height: 100%;
+}
+
+canvas[hidden] {
+    display: none;
+}
+
+#errorMessage:empty {
+    display: none;
+}
+
+#errorMessage {
+    padding: 24px;
+    color: #edf5ff;
+    font-family: sans-serif;
 }
