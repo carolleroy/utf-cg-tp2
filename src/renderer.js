@@ -38,7 +38,7 @@ class Renderer {
         this.gl.enable(this.gl.DEPTH_TEST);
     }
 
-    beginFrame() {
+    beginFrame(camera) {
         const gl = this.gl;
         const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         twgl.resizeCanvasToDisplaySize(this.canvas, pixelRatio);
@@ -47,11 +47,9 @@ class Renderer {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(this.programInfo.program);
 
-        const m4 = twgl.m4;
         const aspect = this.canvas.width / Math.max(this.canvas.height, 1);
-        const projection = m4.perspective(Math.PI / 4, aspect, 0.1, 100);
-        const camera = m4.lookAt([0, 6, 9], [0, 0, 0], [0, 1, 0]);
-        this.viewProjection = m4.multiply(projection, m4.inverse(camera));
+
+        this.viewProjection = camera.getViewProjection(aspect);
     }
 
     draw(object) {

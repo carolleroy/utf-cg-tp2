@@ -2,10 +2,11 @@ const canvas = document.getElementById("glCanvas");
 
 function start() {
     const renderer = new Renderer(canvas);
+    const camera = new Camera();
     const objects = createWorld(renderer.gl);
 
     function render() {
-        renderer.beginFrame();
+        renderer.beginFrame(camera);
 
         for (const object of objects) {
             renderer.draw(object);

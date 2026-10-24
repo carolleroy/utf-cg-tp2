@@ -24,3 +24,42 @@ function createDiskBufferInfo(gl, radius = 3, segments = 96) {
         indices,
     });
 }
+
+function createHemisphereBufferInfo(gl, radius = 1.8, segments = 96, rings = 24) {
+    const positions = [];
+    const normals = [];
+    const texcoords = [];
+    const indices = [];
+
+    for (let ring = 0; ring <= rings; ring++) {
+        const latitude = ring / rings * Math.PI / 2;
+        const ringRadius = Math.cos(latitude);
+        const y = -Math.sin(latitude);
+
+        for (let segment = 0; segment <= segments; segment++) {
+            const longitude = segment / segments * Math.PI * 2;
+            const x = ringRadius * Math.cos(longitude);
+            const z = ringRadius * Math.sin(longitude);
+            positions.push(radius * x, radius * y, radius * z);
+            normals.push(x, y, z);
+            texcoords.push(segment / segments, ring / rings);
+
+            if (ring < rings && segment < segments) {
+                const first = ring * (segments + 1) + segment;
+                const next = first + segments + 1;
+                indices.push(first, first + 1, next);
+
+                if (ring < rings - 1) {
+                    indices.push(first + 1, next + 1, next);
+                }
+            }
+        }
+    }
+
+    return twgl.createBufferInfoFromArrays(gl, {
+        position: {numComponents: 3, data: positions},
+        normal: {numComponents: 3, data: normals},
+        texcoord: {numComponents: 2, data: texcoords},
+        indices,
+    });
+}
