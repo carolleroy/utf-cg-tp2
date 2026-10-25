@@ -1,9 +1,9 @@
 const canvas = document.getElementById("glCanvas");
 
-function start() {
+async function start() {
     const renderer = new Renderer(canvas);
     const camera = new Camera();
-    const objects = createWorld(renderer.gl);
+    const objects = await createWorld(renderer.gl);
 
     function render() {
         renderer.beginFrame(camera);
@@ -18,10 +18,8 @@ function start() {
     requestAnimationFrame(render);
 }
 
-try {
-    start();
-} catch (error) {
+start().catch(error => {
     canvas.hidden = true;
     document.getElementById("errorMessage").textContent = error.message;
     console.error(error);
-}
+});
