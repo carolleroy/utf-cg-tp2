@@ -1,5 +1,6 @@
 async function createWorld(gl) {
     const m4 = twgl.m4;
+    // cria os elementos básicos da base e da camada de neve
     const objects = [
         {
             bufferInfo: twgl.primitives.createCylinderBufferInfo(gl, 1.8, 0.2, 96, 1),
@@ -19,6 +20,7 @@ async function createWorld(gl) {
     ];
 
     const pedestalParts = [
+        // cada item representa uma camada do pedestal
         {radius: 1.5, height: 0.72, y: -1.7, color: [0.55, 0.06, 0.12, 1]},
         {radius: 1.57, height: 0.1, y: -1.34, color: [0.88, 0.64, 0.25, 1]},
         {radius: 1.57, height: 0.1, y: -2.06, color: [0.88, 0.64, 0.25, 1]},
@@ -26,6 +28,7 @@ async function createWorld(gl) {
     ];
 
     for (const part of pedestalParts) {
+        // monta uma camada cilíndrica do pedestal
         objects.push({
             bufferInfo: twgl.primitives.createCylinderBufferInfo(gl, part.radius, part.height, 96, 1),
             worldMatrix: m4.translation([0, part.y, 0]),
@@ -33,6 +36,7 @@ async function createWorld(gl) {
         });
     }
 
+    // adiciona os modelos decorativos ao mundo
     objects.push(...await createSnowPines(gl));
     objects.push(...await createPresents(gl));
     objects.push(...await createReindeer(gl));

@@ -1,6 +1,8 @@
 async function createReindeer(gl) {
     const m4 = twgl.m4;
+    // carrega o modelo principal da rena
     const model = await loadOBJModel(gl, 'assets/models/rena/pm0586_11_00.obj');
+    // calcula a escala usando a altura original do modelo
     const scale = 1.55 / (model.maximum[1] - model.minimum[1]);
     const centerX = (model.minimum[0] + model.maximum[0]) / 2;
     const centerZ = (model.minimum[2] + model.maximum[2]) / 2;

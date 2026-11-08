@@ -1,4 +1,5 @@
 async function loadOBJModel(gl, path) {
+    // transforma o caminho do modelo em uma url completa
     const url = new URL(path, document.baseURI);
     const response = await fetch(url);
 
@@ -16,10 +17,12 @@ async function loadOBJModel(gl, path) {
     let materialName = '';
     let materialFile = '';
 
+    // lê cada linha do arquivo obj
     for (const line of text.split(/\r?\n/)) {
         const [keyword, ...values] = line.trim().split(/\s+/);
 
         if (keyword === 'v') {
+            // guarda a posição e atualiza os limites do modelo
             const vertex = values.slice(0, 3).map(Number);
             positions.push(vertex);
             for (let axis = 0; axis < 3; axis++) {
@@ -35,6 +38,7 @@ async function loadOBJModel(gl, path) {
         } else if (keyword === 'usemtl') {
             materialName = values.join(' ');
         } else if (keyword === 'f') {
+            // separa cada face em triângulos para formar a malha
             if (!groups.has(materialName)) {
                 groups.set(materialName, {position: [], normal: [], texcoord: []});
             }
@@ -62,6 +66,7 @@ async function loadOBJModel(gl, path) {
     const materials = new Map();
     let material;
 
+    // lê cores e caminhos de textura do arquivo mtl
     for (const line of (await materialResponse.text()).split(/\r?\n/)) {
         const [keyword, ...values] = line.trim().split(/\s+/);
         if (keyword === 'newmtl') {
@@ -75,6 +80,7 @@ async function loadOBJModel(gl, path) {
     }
 
     const textures = new Map();
+    // cria um objeto renderizável para cada grupo de material
     const parts = await Promise.all([...groups].map(async ([name, arrays]) => {
         const material = materials.get(name);
         if (!material) throw new Error(`Material não encontrado: ${name}`);

@@ -1,6 +1,7 @@
 class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
+        // obtém o contexto de renderização webgl 2
         this.gl = canvas.getContext("webgl2");
 
         if (!this.gl) {
@@ -42,27 +43,37 @@ class Renderer {
         }
         `;
 
+        // cria o programa de shaders e uma textura branca padrão
         this.programInfo = twgl.createProgramInfo(this.gl, [vertexShader, fragmentShader]);
         this.whiteTexture = twgl.createTexture(this.gl, {src: [255, 255, 255, 255]});
+        // ativa o teste de profundidade para esconder superfícies atrás de outras
         this.gl.enable(this.gl.DEPTH_TEST);
     }
 
-    beginFrame(camera) {
+    beginFrame(camera, variacaoTempo =0 ) {
         const gl = this.gl;
+
+        camera.update(variacaoTempo);
+        // limita o tamanho da tela para evitar renderização excessiva
         const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         twgl.resizeCanvasToDisplaySize(this.canvas, pixelRatio);
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+
+        
+        // limpa a tela e prepara o programa antes de desenhar
         gl.clearColor(0.06, 0.09, 0.14, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(this.programInfo.program);
 
         const aspect = this.canvas.width / Math.max(this.canvas.height, 1);
 
+        // combina a projeção da câmera com o aspecto da tela
         this.viewProjection = camera.getViewProjection(aspect);
     }
 
     draw(object) {
         const gl = this.gl;
+        // conecta os vértices do objeto ao programa de renderização
         twgl.setBuffersAndAttributes(gl, this.programInfo, object.bufferInfo);
         twgl.setUniforms(this.programInfo, {
             u_matrix: twgl.m4.multiply(this.viewProjection, object.worldMatrix),
