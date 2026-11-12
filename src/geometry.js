@@ -70,3 +70,42 @@ function createHemisphereBufferInfo(gl, radius = 1.8, segments = 96, rings = 24)
         indices,
     });
 }
+
+function createSnowBaseBufferInfo(gl, topHeight = -0.1) {
+    const glassRadius = 2.2;
+    const radius = glassRadius - 0.01;
+    const centerHeight = -1.29 + Math.sqrt(glassRadius * glassRadius - 1.57 * 1.57);
+    const startAngle = Math.acos((topHeight - centerHeight) / radius);
+    const rings = 40;
+    const segments = 128;
+    const position = [];
+    const normal = [];
+    const texcoord = [];
+    const indices = [];
+
+    for (let ring = 0; ring <= rings; ring++) {
+        const angle = startAngle + ring / rings * (Math.PI - startAngle);
+        for (let segment = 0; segment <= segments; segment++) {
+            const longitude = segment / segments * Math.PI * 2;
+            const x = Math.sin(angle) * Math.cos(longitude);
+            const y = Math.cos(angle);
+            const z = Math.sin(angle) * Math.sin(longitude);
+            position.push(radius * x, centerHeight + radius * y, radius * z);
+            normal.push(x, y, z);
+            texcoord.push((radius * x / 2.16 + 1) / 2, (radius * z / 2.16 + 1) / 2);
+            if (ring < rings && segment < segments) {
+                const first = ring * (segments + 1) + segment;
+                const next = first + segments + 1;
+                indices.push(first, first + 1, next);
+                if (ring < rings - 1) indices.push(first + 1, next + 1, next);
+            }
+        }
+    }
+
+    return twgl.createBufferInfoFromArrays(gl, {
+        position: {numComponents: 3, data: position},
+        normal: {numComponents: 3, data: normal},
+        texcoord: {numComponents: 2, data: texcoord},
+        indices,
+    });
+}

@@ -1,21 +1,25 @@
 async function createWorld(gl) {
+    const snowTexture = await loadModelTexture(gl, 'assets/textures/neve-craquelada.png');
     const m4 = twgl.m4;
     // cria os elementos básicos da base e da camada de neve
     const objects = [
         {
-            bufferInfo: twgl.primitives.createCylinderBufferInfo(gl, 1.8, 0.2, 96, 1),
+            bufferInfo: twgl.primitives.createTruncatedConeBufferInfo(gl, 2.12, 2.16, 0.2, 96, 1),
+            texture: snowTexture,
+            worldMatrix: m4.translation([0, -0.2, 0]),
+            color: [0.92, 0.96, 1, 1],
+        },
+        {
+            bufferInfo: createDiskBufferInfo(gl, 2.16),
+            texture: snowTexture,
+            worldMatrix: m4.translation([0, -0.099, 0]),
+            color: [0.92, 0.96, 1, 1],
+        },
+        {
+            bufferInfo: createSnowBaseBufferInfo(gl, -0.3),
+            texture: snowTexture,
             worldMatrix: m4.identity(),
             color: [0.92, 0.96, 1, 1],
-        },
-        {
-            bufferInfo: createDiskBufferInfo(gl, 1.8),
-            worldMatrix: m4.translation([0, 0.101, 0]),
-            color: [0.92, 0.96, 1, 1],
-        },
-        {
-            bufferInfo: createHemisphereBufferInfo(gl),
-            worldMatrix: m4.translation([0, -0.1, 0]),
-            color: [0.62, 0.78, 0.85, 1],
         },
     ];
 
@@ -36,6 +40,8 @@ async function createWorld(gl) {
         });
     }
 
+    const sceneryStart = objects.length;
+
     // adiciona os modelos decorativos ao mundo
     objects.push(...await createSnowPines(gl));
     objects.push(...await createPresents(gl));
@@ -43,6 +49,24 @@ async function createWorld(gl) {
     objects.push(...await createSnowRocks(gl));
     objects.push(...await createSnowPlants(gl));
     objects.push(...await createSnowMound(gl));
+    objects.push(...await createChristmasTree(gl));
+    objects.push(...await createGiftSleigh(gl));
+
+    const shift = m4.translation([0, -0.2, 0]);
+    const shiftedParents = new Set();
+    for (const object of objects.slice(sceneryStart)) {
+        if (object.parent) {
+            if (!shiftedParents.has(object.parent)) {
+                object.parent.worldMatrix = m4.multiply(shift, object.parent.worldMatrix);
+                shiftedParents.add(object.parent);
+            }
+            object.worldMatrix = object.parent.worldMatrix;
+        } else {
+            object.worldMatrix = m4.multiply(shift, object.worldMatrix);
+        }
+    }
+
+    objects.push(...await createFestoonLights(gl));
 
     return objects;
 }
@@ -52,7 +76,6 @@ async function createSnowPines(gl) {
     const trees = [
         {x: -1.28, z: -0.61, height: 1.55, rotation: 0},
         {x: -0.4, z: -1.08, height: 1.15, rotation: Math.PI / 3},
-        {x: 0.38, z: -0.94, height: 1.35, rotation: -Math.PI / 4},
     ];
 
     const orbitMatrix = m4.rotationY(20 * Math.PI / 180);
@@ -73,9 +96,9 @@ async function createSnowPines(gl) {
 async function createPresents(gl) {
     const m4 = twgl.m4;
     const variants = [
-        {id: 'acc144', texture: 'acc144a01.png', x: -1.25, z: 0.82, height: 0.32, rotation: 0.25},
-        {id: 'acc144', texture: 'acc144b01.png', x: -1.03, z: 0.38, height: 0.46, rotation: -0.3},
-        {id: 'acc145', texture: 'acc145a01.png', x: 1.08, z: 0.5, height: 0.39, rotation: -0.4},
+        {id: 'acc144', texture: 'acc144a01.png', x: 0.65, z: -0.58, height: 0.22, rotation: 0.35},
+        {id: 'acc144', texture: 'acc144b01.png', x: 1.07, z: -0.62, height: 0.31, rotation: -0.2},
+        {id: 'acc145', texture: 'acc145a01.png', x: 1.43, z: -0.7, height: 0.23, rotation: 0.5},
     ];
 
     return Promise.all(variants.map(async gift => {
@@ -101,8 +124,8 @@ async function createSnowRocks(gl) {
     const centerX = (model.minimum[0] + model.maximum[0]) / 2;
     const centerZ = (model.minimum[2] + model.maximum[2]) / 2;
     const rocks = [
-        {x: -0.45, z: 1.25, width: 0.28, rotation: 0.3},
-        {x: 1.3, z: -0.12, width: 0.32, rotation: -0.7},
+        {x: -0.45, z: 1.35, width: 0.28, rotation: 0.3},
+        {x: 0.85, z: -0.9, width: 0.32, rotation: -0.7},
         {x: -1.28, z: -0.08, width: 0.22, rotation: 1.4},
     ];
 
@@ -166,7 +189,7 @@ async function createSnowMound(gl) {
     const centerX = (model.minimum[0] + model.maximum[0]) / 2;
     const centerZ = (model.minimum[2] + model.maximum[2]) / 2;
     const mounds = [
-        {x: -0.83, z: 0.8, width: 0.58, rotation: -Math.PI / 5},
+        {x: -0.86, z: 0.2, width: 0.58, rotation: -Math.PI / 5},
         {x: 0.35, z: -1.28, width: 0.42, rotation: Math.PI / 3},
     ];
 

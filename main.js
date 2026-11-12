@@ -10,6 +10,7 @@ async function start() {
     camera.bindEvents(canvas);
 
     const objects = await createWorld(renderer.gl);
+    const glassDome = new GlassDome(renderer.gl);
 
     function render(tempoAtual = 0) {
         // converte de milissegundos para segundos
@@ -19,9 +20,15 @@ async function start() {
         // passa a variação de tempo para atualizar a animação da câmera
         renderer.beginFrame(camera, variacaoTempo);
 
+        for (const animated of objects) {
+            if (animated.update) animated.update(tempoAtual);
+        }
+
         for (const object of objects) {
             renderer.draw(object);
         }
+
+        glassDome.draw(camera, renderer.viewProjection);
 
         requestAnimationFrame(render);
     }
