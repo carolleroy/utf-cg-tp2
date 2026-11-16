@@ -26,3 +26,57 @@ canvas[hidden] {
     color: #edf5ff;
     font-family: sans-serif;
 }
+
+/* menu de controles */
+#controles-ui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(10, 20, 30, 0.75);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-family: sans-serif;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 10;
+    pointer-events: none;
+}
+
+#controles-ui h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+    color: #e0f2fe;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 6px;
+    text-transform: uppercase;
+}
+
+#controles-ui ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#controles-ui li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+#controles-ui kbd {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #64748b;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+#controles-ui span {
+    color: #cbd5e1;
+}
