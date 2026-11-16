@@ -59,9 +59,9 @@ class Renderer {
         twgl.resizeCanvasToDisplaySize(this.canvas, pixelRatio);
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-        
+
         // limpa a tela e prepara o programa antes de desenhar
-        gl.clearColor(0.06, 0.09, 0.14, 1);
+        gl.clearColor(0.03, 0.10, 0.16, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(this.programInfo.program);
 
@@ -83,4 +83,6 @@ class Renderer {
         });
         twgl.drawBufferInfo(gl, object.bufferInfo);
     }
+
+    
 }

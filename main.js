@@ -41,3 +41,4 @@ start().catch(error => {
     document.getElementById("errorMessage").textContent = error.message;
     console.error(error);
 });
+
