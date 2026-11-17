@@ -1,12 +1,11 @@
 async function createReindeer(gl) {
     const m4 = twgl.m4;
     const sceneOffset = m4.translation([0, -0.2, 0]);
-//cada uma das poses que o deer vai ter 
+    // pose inicial e duas orientações laterais, sem deslocar a rena . descartando posição q ela só anda pra frente
     const poses = [
         {position: [0, 0, 0], rotation: [0, 0, 0]},
-        {position: [0, 0, 0.65], rotation: [0, 0, 0]},
-        {position: [0, 0, 0.65], rotation: [0, Math.PI / 2, 0]},
-        {position: [0, 0, 0.65], rotation: [0, -Math.PI / 2, 0]},
+        {position: [0, 0, 0], rotation: [0, Math.PI / 2, 0]},
+        {position: [0, 0, 0], rotation: [0, -Math.PI / 2, 0]},
     ];
     let currentPose = 0;
 
@@ -30,8 +29,6 @@ async function createReindeer(gl) {
         throw new Error('O modelo da rena não contém malhas.');
     }
 
-    //cada uma das poses indica um valor de 0 a 2
-
     parts[0].update = () => {
         const pose = poses[currentPose];
         let poseMatrix = m4.translation(pose.position);
@@ -44,8 +41,6 @@ async function createReindeer(gl) {
             part.worldMatrix = worldMatrix;
         }
     };
-
-    //adiciona evento do P para p ou P e segue as poses para sempre ir uma pra frente
 
     window.addEventListener('keydown', event => {
         if (event.code === 'KeyP' && !event.repeat) {

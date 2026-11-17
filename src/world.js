@@ -1,4 +1,4 @@
-async function createWorld(gl) {
+async function createWorld(gl, canvas) {
     const snowTexture = await loadModelTexture(gl, 'assets/textures/neve-craquelada.png');
     const m4 = twgl.m4;
     // cria os elementos básicos da base e da camada de neve
@@ -67,6 +67,7 @@ async function createWorld(gl) {
     }
 
     objects.push(...await createFestoonLights(gl));
+    createSnowParticles(gl, objects); //NEVE QUE VAI TER NO GLOBO
 
     return objects;
 }

@@ -15,6 +15,7 @@
     <script src="src/glb-loader.js" defer></script>
     <script src="src/christmas-tree.js" defer></script>
     <script src="src/festoon-lights.js" defer></script>
+    <script src="src/snow-particles.js" defer></script>
     <script src="src/gift-sleigh.js" defer></script>
     <script src="src/world.js" defer></script>
     <script src="src/glass-dome.js" defer></script>
@@ -26,6 +27,8 @@
         <h2>Controles</h2>
         <ul>
             <li><kbd>L</kbd> <span>Ligar/Desligar luzes</span></li>
+            <li><kbd>Clique no globo</kbd> <span>Fazer a neve cair</span></li>
+            <li><kbd>M</kbd> <span>Tocar/pausar a música</span></li>
             <li><kbd>P</kbd> <span>Alternar posição da rena</span></li>
             <li><kbd>1</kbd> <span>Visão da câmera 1</span></li>
             <li><kbd>2</kbd> <span>Visão da câmera 2</span></li>
@@ -33,6 +36,7 @@
     </div>
 
     <canvas id="glCanvas" aria-label="Diorama de um globo de neve"></canvas>
+    <audio id="backgroundMusic" src="assets/audio/santa-claus-is-on-his-way.mp3" preload="none" loop></audio>
     <p id="errorMessage" role="alert"></p>
 </body>
 </html>

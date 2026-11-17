@@ -56,6 +56,7 @@ class Renderer {
     uniform vec3 u_eye;
     uniform vec3 u_lightDirection;
     uniform vec3 u_specularColor;
+    uniform vec3 u_emissiveColor;
     uniform float u_shininess;
     uniform bool u_luzesAcesas;
 
@@ -89,6 +90,9 @@ class Renderer {
 
             iluminacao = ambiente + difusa + especular;
         }
+
+        // materiais emissivos brilham por conta própria sem iluminar outros objetos
+        iluminacao += u_emissiveColor;
 
         outColor = vec4(iluminacao, color.a);
     }
@@ -145,6 +149,7 @@ class Renderer {
             u_luzesAcesas: this.luzesAcesas,
             u_lightDirection: this.lightDirection,
             u_specularColor: object.specularColor || [0.35, 0.35, 0.35],
+            u_emissiveColor: object.emissiveColor || [0, 0, 0],
             u_shininess: object.shininess === undefined ? 32 : object.shininess
         });
         twgl.drawBufferInfo(gl, object.bufferInfo);

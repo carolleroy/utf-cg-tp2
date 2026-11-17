@@ -33,6 +33,7 @@ async function createFestoonLights(gl) {
             }),
             worldMatrix,
             color: part.color,
+            emissiveColor: part.color.slice(0, 3).map(channel => channel * 0.85),
         };
     });
 
